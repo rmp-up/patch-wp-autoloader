@@ -23,22 +23,46 @@ index deae250..a3e68bf 100644
 -require( ABSPATH . WPINC . '/class-wp-text-diff-renderer-table.php' );
 -require( ABSPATH . WPINC . '/class-wp-text-diff-renderer-inline.php' );
 diff --git a/wp-settings.php b/wp-settings.php
-index 518db55..8e120e1 100644
+index 518db55..95fc316 100644
 --- a/wp-settings.php
 +++ b/wp-settings.php
-@@ -15,15 +15,18 @@
+@@ -15,15 +15,42 @@
   */
  define( 'WPINC', 'wp-includes' );
  
 +spl_autoload_register(
 +    static function ($class) {
-+        $path = ABSPATH . WPINC . '/class-' . strtolower(str_replace('_', '-', $class)) . '.php';
++        $basename = strtolower(str_replace('_', '-', $class)) . '.php';
 +
++        // Possible locations in separate if to spare costs.
++        $path = ABSPATH . WPINC . '/class-' . $basename;
++        if (file_exists($path)) {
++            require_once $path;
++            return;
++        }
++
++        $path = ABSPATH . WPINC . '/class-wp-' . $basename;
++        if (file_exists($path)) {
++            require_once $path;
++            return;
++        }
++
++        $path = ABSPATH . WPINC . '/class-' . str_replace('wp-', '', $basename);
++        if (file_exists($path)) {
++            require_once $path;
++            return;
++        }
++
++        $path = ABSPATH . WPINC . '/' . str_replace('_', '/', $class). '.php';
 +        if (file_exists($path)) {
 +            require_once $path;
 +        }
 +    }
 +);
++
++register_shutdown_function(function () {
++    var_dump(error_get_last());
++});
 +
  // Include files required for initialization.
  require( ABSPATH . WPINC . '/load.php' );
@@ -52,7 +76,7 @@ index 518db55..8e120e1 100644
  require( ABSPATH . WPINC . '/error-protection.php' );
  require( ABSPATH . WPINC . '/default-constants.php' );
  require_once( ABSPATH . WPINC . '/plugin.php' );
-@@ -105,14 +108,9 @@ wp_set_lang_dir();
+@@ -105,14 +132,9 @@ wp_set_lang_dir();
  
  // Load early WordPress files.
  require( ABSPATH . WPINC . '/compat.php' );
@@ -67,7 +91,7 @@ index 518db55..8e120e1 100644
  require( ABSPATH . WPINC . '/pomo/mo.php' );
  
  // Include the wpdb class and, if present, a db.php database drop-in.
-@@ -131,8 +129,6 @@ require( ABSPATH . WPINC . '/default-filters.php' );
+@@ -131,8 +153,6 @@ require( ABSPATH . WPINC . '/default-filters.php' );
  
  // Initialize multisite if enabled.
  if ( is_multisite() ) {
@@ -76,7 +100,7 @@ index 518db55..8e120e1 100644
  	require( ABSPATH . WPINC . '/ms-blogs.php' );
  	require( ABSPATH . WPINC . '/ms-settings.php' );
  } elseif ( ! defined( 'MULTISITE' ) ) {
-@@ -148,53 +144,30 @@ if ( SHORTINIT ) {
+@@ -148,53 +168,30 @@ if ( SHORTINIT ) {
  
  // Load the L10n library.
  require_once( ABSPATH . WPINC . '/l10n.php' );
@@ -130,7 +154,7 @@ index 518db55..8e120e1 100644
  require( ABSPATH . WPINC . '/feed.php' );
  require( ABSPATH . WPINC . '/bookmark.php' );
  require( ABSPATH . WPINC . '/bookmark-template.php' );
-@@ -203,31 +176,13 @@ require( ABSPATH . WPINC . '/cron.php' );
+@@ -203,31 +200,13 @@ require( ABSPATH . WPINC . '/cron.php' );
  require( ABSPATH . WPINC . '/deprecated.php' );
  require( ABSPATH . WPINC . '/script-loader.php' );
  require( ABSPATH . WPINC . '/taxonomy.php' );
@@ -162,7 +186,7 @@ index 518db55..8e120e1 100644
  require( ABSPATH . WPINC . '/nav-menu.php' );
  require( ABSPATH . WPINC . '/nav-menu-template.php' );
  require( ABSPATH . WPINC . '/admin-bar.php' );
-@@ -258,9 +213,6 @@ require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-term-meta-fields.php'
+@@ -258,9 +237,6 @@ require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-term-meta-fields.php'
  require( ABSPATH . WPINC . '/rest-api/fields/class-wp-rest-user-meta-fields.php' );
  require( ABSPATH . WPINC . '/rest-api/search/class-wp-rest-search-handler.php' );
  require( ABSPATH . WPINC . '/rest-api/search/class-wp-rest-post-search-handler.php' );
