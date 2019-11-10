@@ -2,9 +2,22 @@
 
 > Short description as in composer.json
 
-`composer install patch/wp-autoloader`
+Merge the following to your composer.json file:
 
-Note: *Our package uses the same major and minor version as your software does.*
+```json
+{
+  "require": {
+    "patch/wp-autoloader": "5.2.*"
+  },
+  "extra": {
+    "patchwork": {
+      "path/to/wordpress/": "patch/wp-*"    
+    }  
+  }
+}
+```
+
+Note: *Our package uses the same major and minor version as WordPress does.*
 
 
 ## Why? 5% less costs!
