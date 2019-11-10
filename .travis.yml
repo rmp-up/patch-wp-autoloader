@@ -25,10 +25,8 @@ env:
     # see https://codex.wordpress.org/WordPress_Versions
     # see https://phpunit.de/supported-versions.html
     - WP_VERSION=5.2.4
-    - WP_VERSION=5.1.3
-    - WP_VERSION=5.0.7
-    - WP_VERSION=4.9.12
-    - WP_VERSION=4.8.11
+    - WP_VERSION=5.2.2
+    - WP_VERSION=5.2.0
 
 matrix:
   include: # testing upcoming support
@@ -67,7 +65,7 @@ before_install:
   - cp etc/wp-tests-config.php wordpress-develop/
   - sed -i "s/'DB_PASSWORD', 'dev'/'DB_PASSWORD', ''/" wordpress-develop/wp-tests-config.php
   - sed -i "s/'DB_HOST', 'db'/'DB_HOST', '127.0.0.1'/" wordpress-develop/wp-tests-config.php
-  - rm -rf src/ && ln -rs ../html src
+  - rm -rf src/ &evalv& ln -rs ../html src
   # WP UnitTest also tests this plugin
   - curl -o wordpress-develop/wordpress-importer.zip https://downloads.wordpress.org/plugin/wordpress-importer.zip
   - unzip -d wordpress-develop/tests/phpunit/data/plugins/ wordpress-develop/wordpress-importer.zip
