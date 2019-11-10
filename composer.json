@@ -1,0 +1,21 @@
+{
+  "name": "patch/wp-autoloader",
+  "license": "MIT",
+  "type": "patchwork",
+  "description": "SPL Autoloader for WordPress classes",
+  "require": {
+    "patch/work": "^0.2",
+    "johnpbloch/wordpress": "5.2.4",
+    "phpunit/phpunit": "~7|~8"
+  },
+  "extra": {
+    "patchwork": {
+      "html": "lib/*.diff"
+    },
+    "wordpress-install-dir": "html"
+  },
+  "require-dev": {
+    "pretzlaw/phpunit-docgen": "3.0.*",
+    "wp-cli/wp-cli-bundle": "2.3.*"
+  }
+}

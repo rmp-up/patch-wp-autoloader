@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  php:
+    # Config in sub directory for faster build, because the dir is almost empty.
+    build: etc/
+    volumes:
+      - ".:/var/www"
+      - ".docker/composer:/var/composer"
+    environment:
+      COMPOSER_LOCAL: .docker/composer
+      COMPOSER_CACHE_DIR: /var/composer
+      PHP_IDE_CONFIG: serverName=php
+    networks:
+      default:
+        ipv4_address: 10.221.13.71
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ".docker/db:/var/lib/mysql"
+    environment:
+      MYSQL_USER: travis
+      MYSQL_PASSWORD: dev
+      MYSQL_DATABASE: dev
+      MYSQL_ROOT_PASSWORD: dev
+    networks:
+      default:
+        ipv4_address: 10.221.13.157
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.221.13.0/24
